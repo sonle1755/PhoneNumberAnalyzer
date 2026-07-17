@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="PhoneNumberAnalyzer.Api/PhoneNumberAnalyzer.Api.csproj" />
+  <Project Path="PhoneNumberAnalyzer.Business/PhoneNumberAnalyzer.Business.csproj" />
+  <Project Path="PhoneNumberAnalyzer.Data/PhoneNumberAnalyzer.Data.csproj" />
+</Solution>
