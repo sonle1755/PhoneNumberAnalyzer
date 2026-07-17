@@ -9,8 +9,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
     public DbSet<UserAuthProvider> UserAuthProviders => Set<UserAuthProvider>();
 
-    public DbSet<Pattern> Patterns => Set<Pattern>();
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<User>()

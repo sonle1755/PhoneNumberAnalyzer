@@ -2,21 +2,16 @@ using System.Collections.Immutable;
 using PhoneNumberAnalyzer.Business.Dtos;
 using PhoneNumberAnalyzer.Business.Helpers;
 using PhoneNumberAnalyzer.Business.Interfaces;
-using PhoneNumberAnalyzer.Data.Interfaces;
 
 namespace PhoneNumberAnalyzer.Business.Services;
 
-public class PatternAnalyzerService(IPatternRepository patternRepository)
+public class PatternAnalyzerService()
     : IPatternAnalyzerService
 {
-    private readonly IPatternRepository _patternRepository = patternRepository;
 
     private async Task<ImmutableArray<CompiledRegexPatterns>> GetCompiledRegexPatternsAsync()
     {
-        var patterns = await _patternRepository.GetAllAsync();
-        return [..patterns.Select(p => new CompiledRegexPatterns(id: p.Id,
-                                                                 name: p.Name,
-                                                                 regexPattern: p.RegexString))];
+        throw new NotImplementedException();
     }
 
     private static IEnumerable<MatchedPatternDto> FindMatchedPatterns(string pNumber, ImmutableArray<CompiledRegexPatterns> patterns)
@@ -45,12 +40,5 @@ public class PatternAnalyzerService(IPatternRepository patternRepository)
     public async Task<ImmutableArray<PatternAnalyzeResultDto>> BulkAnalyzeAsync(ImmutableArray<string> input)
     {
         throw new NotImplementedException();
-        // var patterns = await _patternRepository.GetAllAsync();
-        // for (int i = 0; i <= input.Length; i++)
-        // {
-        //     if (string.IsNullOrWhiteSpace(input[i])) yield return new PatternAnalyzeResultDto(PhoneNumber: input[i], MatchedPatterns: []);
-        //     var pNumber = VietnamPhoneHelpers.Extract(input[i]);
-        //     var matchedPatterns = FindMatchedPatterns(pNumber, patterns);
-        // }
     }
 }
