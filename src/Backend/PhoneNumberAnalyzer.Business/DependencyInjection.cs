@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using PhoneNumberAnalyzer.Business.Interfaces;
 using PhoneNumberAnalyzer.Business.Services;
+
 namespace PhoneNumberAnalyzer.Business;
 
 public static class DependencyInjection
@@ -9,8 +10,10 @@ public static class DependencyInjection
     {
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IAuthenticationService, AuthenticationService>();
-        services.AddScoped<IPatternService, PatternService>();
-        services.AddScoped<IPatternAnalyzerService, PatternAnalyzerService>();
+        services.AddScoped<IPatternTemplateService, PatternTemplateService>();
+        services.AddScoped<IPatternTemplateEvaluationService, PatternTemplateEvaluationService>();
+        services.AddSingleton<IPatternSpecificationCache, PatternSpecificationCache>();
+        services.AddScoped<IPhoneNumberExtractionService, PhoneNumberExtractionService>();
 
         return services;
     }
