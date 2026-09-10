@@ -4,5 +4,5 @@ namespace PhoneNumberAnalyzer.Business.Interfaces;
 
 public interface IUserService
 {
-  public Task<IEnumerable<UserDto>> GetAllAsync();
+    public Task<IEnumerable<UserDetail>> GetAllAsync();
 }

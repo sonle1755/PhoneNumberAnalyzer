@@ -12,7 +12,7 @@ public sealed class PatternTemplateEvaluationService(
     private readonly IPatternTemplateRepository _templateRepository = templateRepository;
     private readonly IPatternSpecificationCache _specCache = specCache;
 
-    public async Task<IReadOnlyCollection<PatternTemplateMatch>> EvaluateAsync(string digits, int? userId)
+    public async Task<IReadOnlyCollection<PatternTemplateMatch>> EvaluateAsync(string digits, Guid? userId)
     {
         var templates = userId is not null
             ? await _templateRepository.GetVisibleToUserAsync(userId.Value)

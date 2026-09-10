@@ -8,5 +8,5 @@ public interface IPatternTemplateEvaluationService
     /// Evaluates a normalized digit string against all templates visible to the
     /// given user (owned + public), returning which ones matched.
     /// </summary>
-    Task<IReadOnlyCollection<PatternTemplateMatch>> EvaluateAsync(string digits, int? userId);
+    Task<IReadOnlyCollection<PatternTemplateMatch>> EvaluateAsync(string digits, Guid? userId);
 }

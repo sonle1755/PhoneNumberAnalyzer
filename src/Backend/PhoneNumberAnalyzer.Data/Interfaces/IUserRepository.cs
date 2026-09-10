@@ -8,11 +8,11 @@ public interface IUserRepository
 
     public Task<User?> GetByUserNameAsync(string username);
 
-    public Task<User?> GetByIdAsync(int id);
+    public Task<User?> GetByIdAsync(Guid id);
 
     public Task<User> AddAsync(string firstName,
                                string lastName,
-                               string userName,
+                               string username,
                                string? email,
                                string? avatarUrl);
 }

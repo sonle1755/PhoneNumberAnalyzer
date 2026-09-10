@@ -13,7 +13,7 @@ public sealed class PatternTemplate
 
     public string Description { get; set; } = string.Empty;
 
-    public int? OwnerId { get; set; }
+    public Guid? OwnerId { get; set; }
 
     public User? Owner { get; set; }
 
