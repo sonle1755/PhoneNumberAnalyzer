@@ -22,6 +22,114 @@ namespace PhoneNumberAnalyzer.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("PhoneNumberAnalyzer.Data.Entities.PatternRule", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("GroupId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Length")
+                        .HasMaxLength(9)
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<int?>("ReferencePosition")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("RuleType")
+                        .HasColumnType("integer");
+
+                    b.PrimitiveCollection<int[]>("TargetPositions")
+                        .IsRequired()
+                        .HasColumnType("integer[]");
+
+                    b.PrimitiveCollection<string[]>("Values")
+                        .IsRequired()
+                        .HasColumnType("text[]");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
+
+                    b.ToTable("PatternRules");
+                });
+
+            modelBuilder.Entity("PhoneNumberAnalyzer.Data.Entities.PatternRuleGroup", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Level")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<Guid?>("ParentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("PatternTemplateId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("RuleOperator")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
+
+                    b.HasIndex("PatternTemplateId");
+
+                    b.ToTable("PatternRuleGroups");
+                });
+
+            modelBuilder.Entity("PhoneNumberAnalyzer.Data.Entities.PatternTemplate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<int?>("OwnerId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("PatternTemplates");
+                });
+
             modelBuilder.Entity("PhoneNumberAnalyzer.Data.Entities.User", b =>
                 {
                     b.Property<int>("Id")
@@ -94,6 +202,45 @@ namespace PhoneNumberAnalyzer.Data.Migrations
                     b.ToTable("UserAuthProviders");
                 });
 
+            modelBuilder.Entity("PhoneNumberAnalyzer.Data.Entities.PatternRule", b =>
+                {
+                    b.HasOne("PhoneNumberAnalyzer.Data.Entities.PatternRuleGroup", "Group")
+                        .WithMany("Rules")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+                });
+
+            modelBuilder.Entity("PhoneNumberAnalyzer.Data.Entities.PatternRuleGroup", b =>
+                {
+                    b.HasOne("PhoneNumberAnalyzer.Data.Entities.PatternRuleGroup", "ParentGroup")
+                        .WithMany("ChildGroups")
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("PhoneNumberAnalyzer.Data.Entities.PatternTemplate", "PatternTemplate")
+                        .WithMany("RuleGroups")
+                        .HasForeignKey("PatternTemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ParentGroup");
+
+                    b.Navigation("PatternTemplate");
+                });
+
+            modelBuilder.Entity("PhoneNumberAnalyzer.Data.Entities.PatternTemplate", b =>
+                {
+                    b.HasOne("PhoneNumberAnalyzer.Data.Entities.User", "Owner")
+                        .WithMany("PatternTemplates")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Owner");
+                });
+
             modelBuilder.Entity("PhoneNumberAnalyzer.Data.Entities.UserAuthProvider", b =>
                 {
                     b.HasOne("PhoneNumberAnalyzer.Data.Entities.User", "User")
@@ -105,9 +252,23 @@ namespace PhoneNumberAnalyzer.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("PhoneNumberAnalyzer.Data.Entities.PatternRuleGroup", b =>
+                {
+                    b.Navigation("ChildGroups");
+
+                    b.Navigation("Rules");
+                });
+
+            modelBuilder.Entity("PhoneNumberAnalyzer.Data.Entities.PatternTemplate", b =>
+                {
+                    b.Navigation("RuleGroups");
+                });
+
             modelBuilder.Entity("PhoneNumberAnalyzer.Data.Entities.User", b =>
                 {
                     b.Navigation("AuthProviders");
+
+                    b.Navigation("PatternTemplates");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PhoneNumberAnalyzer.Data.Entities;
+using PhoneNumberAnalyzer.Data.Enums;
 
 namespace PhoneNumberAnalyzer.Data;
 
@@ -8,8 +9,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<User> Users => Set<User>();
     public DbSet<UserAuthProvider> UserAuthProviders => Set<UserAuthProvider>();
     public DbSet<PatternTemplate> PatternTemplates => Set<PatternTemplate>();
-    public DbSet<PatternDigitRule> PatternDigitRules => Set<PatternDigitRule>();
-    public DbSet<PatternDigitRulePosition> PatternDigitRulePositions => Set<PatternDigitRulePosition>();
+    public DbSet<PatternRuleGroup> PatternRuleGroups => Set<PatternRuleGroup>();
+    public DbSet<PatternRule> PatternRules => Set<PatternRule>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -27,41 +28,55 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
             // OwnerId is nullable = public template. Cascade delete when the owning
             // user is deleted, per "all their private templates get deleted too".
-            entity.HasOne<User>()
-                .WithMany()
+            entity.HasOne(e => e.Owner)
+                .WithMany(e => e.PatternTemplates)
                 .HasForeignKey(t => t.OwnerId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired(false);
 
             entity.HasIndex(t => t.OwnerId);
+
+            entity
+                .HasMany(e => e.RuleGroups)
+                .WithOne(e => e.PatternTemplate)
+                .HasForeignKey(e => e.PatternTemplateId)
+                .IsRequired();
         });
 
-        modelBuilder.Entity<PatternDigitRule>(entity =>
+        modelBuilder.Entity<PatternRuleGroup>(entity =>
         {
             entity.HasKey(r => r.Id);
+            entity.Property(t => t.Name).IsRequired().HasMaxLength(200);
+            // Max group nesting level will be defined in business layer
+            entity.Property(t => t.Level).IsRequired();
+            entity.Property(t => t.RuleOperator).IsRequired().HasDefaultValue(RuleOperator.And);
 
             entity.HasOne(r => r.PatternTemplate)
-                .WithMany(t => t.Rules)
-                .HasForeignKey(r => r.PatternTemplateId)
-                .OnDelete(DeleteBehavior.Cascade); // deleting a template removes its rules
+                  .WithMany(t => t.RuleGroups)
+                  .HasForeignKey(r => r.PatternTemplateId)
+                  .OnDelete(DeleteBehavior.Cascade) // deleting a template removes its rule groups
+                  .IsRequired();
 
-            entity.Property(r => r.DigitValue).HasAnnotation("Range", new[] { 0, 9 });
-            entity.Property(r => r.ReferencePosition).HasAnnotation("Range", new[] { 1, 9 });
+            entity.HasOne(r => r.ParentGroup)
+                  .WithMany(t => t.ChildGroups)
+                  .HasForeignKey(r => r.ParentId)
+                  .OnDelete(DeleteBehavior.Cascade) // deleting a group removes its child groups
+                  .IsRequired(false);
+
         });
 
-        modelBuilder.Entity<PatternDigitRulePosition>(entity =>
+        modelBuilder.Entity<PatternRule>(entity =>
         {
             entity.HasKey(p => p.Id);
+            entity.Property(t => t.Name).IsRequired().HasMaxLength(200);
+            // A phone number only consist of 10 number (except for the fisrt number - 0)
+            entity.Property(t => t.Length).IsRequired().HasMaxLength(9);
 
-            entity.HasOne(p => p.PatternDigitRule)
-                .WithMany(r => r.Positions)
-                .HasForeignKey(p => p.PatternDigitRuleId)
-                .OnDelete(DeleteBehavior.Cascade); // deleting a rule removes its positions
-
-            entity.Property(p => p.Position).IsRequired();
-
-            // A single rule shouldn't target the same position twice.
-            entity.HasIndex(p => new { p.PatternDigitRuleId, p.Position }).IsUnique();
+            entity.HasOne(p => p.Group)
+                .WithMany(r => r.Rules)
+                .HasForeignKey(p => p.GroupId)
+                .OnDelete(DeleteBehavior.Cascade) // deleting a group removes its rules
+                .IsRequired();
         });
 
     }

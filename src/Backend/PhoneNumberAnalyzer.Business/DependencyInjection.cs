@@ -10,6 +10,10 @@ public static class DependencyInjection
     {
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IAuthenticationService, AuthenticationService>();
+        services.AddScoped<IPatternTemplateService, PatternTemplateService>();
+        services.AddScoped<IPatternTemplateEvaluationService, PatternTemplateEvaluationService>();
+        services.AddSingleton<IPatternSpecificationCache, PatternSpecificationCache>();
+        services.AddScoped<IPhoneNumberExtractionService, PhoneNumberExtractionService>();
 
         return services;
     }

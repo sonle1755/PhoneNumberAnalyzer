@@ -1,5 +1,3 @@
-using System.Collections.Immutable;
-
 namespace PhoneNumberAnalyzer.Data.Entities;
 
 /// <summary>
@@ -17,7 +15,7 @@ public sealed class PatternTemplate
 
     public int? OwnerId { get; set; }
 
-    public bool IsEnabled { get; set; } = true;
+    public User? Owner { get; set; }
 
     public DateTimeOffset? DeletedAt { get; set; }
 
@@ -25,33 +23,6 @@ public sealed class PatternTemplate
 
     public DateTimeOffset? UpdatedAt { get; set; }
 
-    public ICollection<PatternDigitRule> Rules { get; set; } = [];
+    public ICollection<PatternRuleGroup> RuleGroups { get; set; } = [];
 
-    public static PatternTemplate Create(string name,
-                                         string description,
-                                         ImmutableArray<PatternDigitRule> rules,
-                                         int? ownerId)
-    {
-        if (name == null)
-            throw new ArgumentNullException(nameof(name), "PatternTempalte Name cannot be null!");
-
-        if (description == null)
-        {
-            throw new ArgumentNullException(nameof(description),
-                                            "PatternTemplate Description cannot be null!");
-        }
-
-        return new PatternTemplate
-        {
-            Id = Guid.NewGuid(),
-            Name = name,
-            Description = description,
-            Rules = rules,
-            OwnerId = ownerId,
-            IsEnabled = true,
-            CreatedAt = DateTimeOffset.UtcNow,
-            DeletedAt = null,
-            UpdatedAt = null
-        };
-    }
 }

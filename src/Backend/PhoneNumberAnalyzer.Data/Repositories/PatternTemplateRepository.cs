@@ -9,52 +9,92 @@ public class PatternTemplateRepository(AppDbContext db) : IPatternTemplateReposi
 {
     private readonly AppDbContext _db = db;
 
-    private async Task<PatternTemplate?> GetByIdAsync(Guid patternTemplateId)
+    public async Task<PatternTemplate?> GetByIdAsync(Guid patternTemplateId)
     {
-        return await _db.PatternTemplates.AsNoTracking()
-                                         .Where(pt => pt.Id == patternTemplateId)
-                                         .FirstOrDefaultAsync();
+        return await _db.PatternTemplates
+            .Where(pt => pt.Id == patternTemplateId)
+            .Include(pt => pt.RuleGroups)
+                .ThenInclude(g => g.Rules)
+            .FirstOrDefaultAsync();
     }
 
     public async Task<PatternTemplate> AddAsync(string name,
-                                                string description,
-                                                ImmutableArray<PatternDigitRule> rules,
-                                                int? ownerId)
+                                                string description)
     {
-        var user = PatternTemplate.Create(name, description, rules, ownerId);
-        await _db.PatternTemplates.AddAsync(user);
+        var patternTemplate = new PatternTemplate
+        {
+            Id = Guid.NewGuid(),
+            Name = name,
+            Description = description,
+            RuleGroups = [],
+            Owner = null,
+            CreatedAt = DateTimeOffset.UtcNow,
+            DeletedAt = null,
+            UpdatedAt = null
+        };
+        await _db.PatternTemplates.AddAsync(patternTemplate);
+        return patternTemplate;
+    }
+
+    public async Task SaveChangesAsync()
+    {
         await _db.SaveChangesAsync();
-        return user;
+    }
+
+    public async Task UpdateAsync(Guid patternTemplateId, string name, string description)
+    {
+        var patternTemplate = await GetByIdAsync(patternTemplateId)
+                              ?? throw new ArgumentNullException(nameof(patternTemplateId));
+        patternTemplate.Name = name;
+        patternTemplate.Description = description;
+    }
+
+    public async Task<ImmutableArray<PatternTemplate>> GetVisibleToUserAsync(int userId)
+    {
+        var templates = await _db.PatternTemplates
+            .Where(t => t.DeletedAt == null && (t.OwnerId == userId || t.OwnerId == null))
+                .Include(t => t.RuleGroups)
+                    .ThenInclude(g => g.Rules)
+            .ToListAsync();
+
+        return [.. templates];
+    }
+
+    public async Task<ImmutableArray<PatternTemplate>> GetPublicAsync()
+    {
+        var templates = await _db.PatternTemplates
+            .Where(t => t.DeletedAt == null && t.OwnerId == null)
+                .Include(t => t.RuleGroups)
+                    .ThenInclude(g => g.Rules)
+            .ToListAsync();
+
+        return [.. templates];
     }
 
     public async Task UpdateAsync(Guid patternTemplateId,
                                   string name,
                                   string description,
-                                  ImmutableArray<PatternDigitRule> rules,
-                                  int? ownerId)
+                                  ImmutableArray<PatternRuleGroup> ruleGroups)
     {
         var patternTemplate = await GetByIdAsync(patternTemplateId)
             ?? throw new InvalidOperationException($"Found no PatternTemplate with matching Id {patternTemplateId}");
         patternTemplate.Name = name;
         patternTemplate.Description = description;
-        patternTemplate.Rules = rules;
-        patternTemplate.OwnerId = ownerId;
-        await _db.SaveChangesAsync();
+        patternTemplate.RuleGroups = ruleGroups;
+        patternTemplate.UpdatedAt = DateTimeOffset.UtcNow;
     }
 
     public async Task DisableAsync(Guid patternTemplateId)
     {
         var patternTemplate = await GetByIdAsync(patternTemplateId)
             ?? throw new InvalidOperationException($"Found no PatternTemplate with matching Id {patternTemplateId}");
-        patternTemplate.IsEnabled = false;
-        await _db.SaveChangesAsync();
+        patternTemplate.DeletedAt = DateTimeOffset.UtcNow;
     }
 
     public async Task EnableAsync(Guid patternTemplateId)
     {
         var patternTemplate = await GetByIdAsync(patternTemplateId)
             ?? throw new InvalidOperationException($"Found no PatternTemplate with matching Id {patternTemplateId}");
-        patternTemplate.IsEnabled = true;
-        await _db.SaveChangesAsync();
+        patternTemplate.DeletedAt = null;
     }
 }

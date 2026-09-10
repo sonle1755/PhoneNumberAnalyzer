@@ -5,11 +5,19 @@ namespace PhoneNumberAnalyzer.Data.Interfaces;
 
 public interface IPatternTemplateRepository
 {
-    Task<PatternTemplate> AddAsync(string name, string description, ImmutableArray<PatternDigitRule> rules, int? ownerId);
+    Task<ImmutableArray<PatternTemplate>> GetVisibleToUserAsync(int userId);
 
-    Task UpdateAsync(Guid patternTemplateId, string name, string description, ImmutableArray<PatternDigitRule> rules, int? ownerId);
+    Task<ImmutableArray<PatternTemplate>> GetPublicAsync();
+
+    Task<PatternTemplate?> GetByIdAsync(Guid patternTemplateId);
+
+    Task<PatternTemplate> AddAsync(string name, string description);
+
+    Task UpdateAsync(Guid patternTemplateId, string name, string description);
 
     Task DisableAsync(Guid patternTemplateId);
 
     Task EnableAsync(Guid patternTemplateId);
+
+    Task SaveChangesAsync();
 }
