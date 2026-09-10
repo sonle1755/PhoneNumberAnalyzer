@@ -129,7 +129,7 @@ public class PatternTemplateService([NotNull] IPatternTemplateRepository pattern
         throw new NotImplementedException();
     }
 
-    public Task<ImmutableArray<PatternTemplateDetail>> GetVisibleToUserAsync(int userId)
+    public Task<ImmutableArray<PatternTemplateDetail>> GetVisibleToUserAsync(Guid userId)
     {
         throw new NotImplementedException();
     }

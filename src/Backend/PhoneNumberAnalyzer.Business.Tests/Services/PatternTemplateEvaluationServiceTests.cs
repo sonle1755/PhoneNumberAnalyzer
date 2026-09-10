@@ -38,14 +38,14 @@ public class PatternTemplateEvaluationServiceTests
         var template = CreateTemplate(Guid.NewGuid(), "Lucky Number");
 
         _repositoryMock
-            .Setup(r => r.GetVisibleToUserAsync(It.IsAny<int>()))
+            .Setup(r => r.GetVisibleToUserAsync(It.IsAny<Guid>()))
             .ReturnsAsync([template]);
 
         _specCacheMock
             .Setup(c => c.GetOrBuild(template))
             .Returns(new StubSpecification(true));
 
-        var result = await _service.EvaluateAsync("0912345678", userId: 1);
+        var result = await _service.EvaluateAsync("0912345678", userId: null);
 
         Assert.Single(result);
         Assert.Equal(template.Id, result.First().TemplateId);
@@ -57,14 +57,14 @@ public class PatternTemplateEvaluationServiceTests
         var template = CreateTemplate(Guid.NewGuid(), "Lucky Number");
 
         _repositoryMock
-            .Setup(r => r.GetVisibleToUserAsync(It.IsAny<int>()))
+            .Setup(r => r.GetVisibleToUserAsync(It.IsAny<Guid>()))
             .ReturnsAsync([template]);
 
         _specCacheMock
             .Setup(c => c.GetOrBuild(template))
             .Returns(new StubSpecification(false));
 
-        var result = await _service.EvaluateAsync("0912345678", userId: 1);
+        var result = await _service.EvaluateAsync("0912345678", userId: null);
 
         Assert.Empty(result);
     }
@@ -79,7 +79,7 @@ public class PatternTemplateEvaluationServiceTests
         await _service.EvaluateAsync("0912345678", userId: null);
 
         _repositoryMock.Verify(r => r.GetPublicAsync(), Times.Once);
-        _repositoryMock.Verify(r => r.GetVisibleToUserAsync(It.IsAny<int>()), Times.Never);
+        _repositoryMock.Verify(r => r.GetVisibleToUserAsync(It.IsAny<Guid>()), Times.Never);
     }
 
     [Fact]
@@ -89,13 +89,13 @@ public class PatternTemplateEvaluationServiceTests
         var templateB = CreateTemplate(Guid.NewGuid(), "Template B");
 
         _repositoryMock
-            .Setup(r => r.GetVisibleToUserAsync(It.IsAny<int>()))
+            .Setup(r => r.GetVisibleToUserAsync(It.IsAny<Guid>()))
             .ReturnsAsync([templateA, templateB]);
 
         _specCacheMock.Setup(c => c.GetOrBuild(templateA)).Returns(new StubSpecification(true));
         _specCacheMock.Setup(c => c.GetOrBuild(templateB)).Returns(new StubSpecification(true));
 
-        var result = await _service.EvaluateAsync("0912345678", userId: 1);
+        var result = await _service.EvaluateAsync("0912345678", userId: null);
 
         Assert.Equal(2, result.Count);
         Assert.Contains(result, m => m.TemplateId == templateA.Id);

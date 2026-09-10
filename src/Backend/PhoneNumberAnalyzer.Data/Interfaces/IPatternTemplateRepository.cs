@@ -5,7 +5,7 @@ namespace PhoneNumberAnalyzer.Data.Interfaces;
 
 public interface IPatternTemplateRepository
 {
-    Task<ImmutableArray<PatternTemplate>> GetVisibleToUserAsync(int userId);
+    Task<ImmutableArray<PatternTemplate>> GetVisibleToUserAsync(Guid userId);
 
     Task<ImmutableArray<PatternTemplate>> GetPublicAsync();
 

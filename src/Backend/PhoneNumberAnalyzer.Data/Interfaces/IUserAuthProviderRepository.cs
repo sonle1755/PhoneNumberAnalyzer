@@ -4,10 +4,10 @@ namespace PhoneNumberAnalyzer.Data.Interfaces;
 
 public interface IUserAuthProviderRepository
 {
-    public Task AddAsync(int userId,
+    public Task AddAsync(Guid userId,
                          string provider,
                          string passwordHash,
                          string? providerUserId);
 
-    public Task<IEnumerable<UserAuthProvider>> GetAuthProvidersByUserIdAsync(int userId);
+    public Task<IEnumerable<UserAuthProvider>> GetAuthProvidersByUserIdAsync(Guid userId);
 }
