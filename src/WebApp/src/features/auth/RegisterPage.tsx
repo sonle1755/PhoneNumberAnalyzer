@@ -9,30 +9,31 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
-import { useRegister } from "./hooks";
+import { useRegister } from "./hooks/useRegister";
+import type { RegisterRequest } from "@/shared/api/Api";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
   const { mutate, isPending, error } = useRegister();
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [username, setUsername] = useState("");
-  const [avatarUrl, setAvatarUrl] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [formData, setFormData] = useState<RegisterRequest>({
+    firstName: "",
+    lastName: "",
+    username: "",
+    password: "",
+    avatarUrl: null,
+    email: null,
+  });
+  const [confirmPassword, setConfirmPassword] = useState(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    mutate(
-      { firstName, lastName, username, avatarUrl, email, password },
-      {
-        onSuccess: (data) => {
-          // localStorage.setItem("token", data.accessToken);
-          navigate("/");
-        },
+    mutate(formData, {
+      onSuccess: () => {
+        // localStorage.setItem("token", data.accessToken);<t_��>hlua require"cmp.utils.feedkeys".run(82)
+        // ý
+        navigate("/");
       },
-    );
+    });
   };
 
   return (
@@ -46,9 +47,7 @@ export default function RegisterPage() {
       >
         <Stack spacing={3}>
           <Box>
-            <Typography variant="h5" fontWeight="bold">
-              Tạo tài khoản mới
-            </Typography>
+            <Typography variant="h5">Tạo tài khoản mới</Typography>
           </Box>
 
           <form onSubmit={handleSubmit}>
@@ -56,41 +55,51 @@ export default function RegisterPage() {
               <TextField
                 label="Họ"
                 fullWidth
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
+                value={formData.firstName}
+                onChange={(e) =>
+                  setFormData({ ...formData, firstName: e.target.value })
+                }
               />
               <TextField
                 label="Tên"
                 fullWidth
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
+                value={formData.lastName}
+                onChange={(e) =>
+                  setFormData({ ...formData, lastName: e.target.value })
+                }
               />
               <TextField
                 label="Tên tài khoản"
                 fullWidth
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={formData.username}
+                onChange={(e) =>
+                  setFormData({ ...formData, username: e.target.value })
+                }
               />
 
               <TextField
                 label="Email"
                 type="email"
                 fullWidth
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
               />
 
               <TextField
                 label="Mật khẩu"
-                type="Mật khẩu"
+                type="password"
                 fullWidth
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
               />
 
               <TextField
                 label="Xác nhận mật khẩu"
-                type="Mật khẩu"
+                type="password"
                 fullWidth
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
@@ -106,7 +115,9 @@ export default function RegisterPage() {
                 type="submit"
                 variant="contained"
                 size="large"
-                disabled={!username || !password || !confirmPassword}
+                disabled={
+                  !formData.username || !formData.password || !confirmPassword
+                }
               >
                 Tạo tài khoản
               </Button>
