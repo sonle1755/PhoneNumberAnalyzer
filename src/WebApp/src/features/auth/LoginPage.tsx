@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
-import { useLogin } from "./hooks";
+import { useLogin } from "./hooks/useLogin";
 
 export default function LoginPage() {
   const navigate = useNavigate();

@@ -15,9 +15,11 @@ public class AuthenticationService(IUserRepository userRepository,
 
     public async Task Login(string username, string password)
     {
-        var user = await _userRepository.GetByUserNameAsync(username) ?? throw new InvalidOperationException();
+        var user = await _userRepository.GetByUserNameAsync(username)
+                   ?? throw new InvalidOperationException("User not found!");
         var authProviders = await _userAuthProviderRepository.GetAuthProvidersByUserIdAsync(user.Id);
-        var localAuthProvider = authProviders.Single(ap => ap.Provider == "local");
+        var localAuthProvider = authProviders.Single(ap => ap.Provider == "local")
+                   ?? throw new InvalidOperationException("UserAuthProvider not found!");
         _hasher.VerifyHashedPassword(user, localAuthProvider.PasswordHash, password);
     }
 

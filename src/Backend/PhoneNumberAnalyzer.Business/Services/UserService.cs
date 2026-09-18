@@ -13,17 +13,17 @@ public class UserService : IUserService
     _userRepository = userRepository;
   }
 
-  public async Task<IEnumerable<UserDto>> GetAllAsync()
-  {
-    var users = await _userRepository.GetAllAsync();
-    return users.Select(u => new UserDto(id: u.Id,
-                                         firstName: u.FirstName,
-                                         lastName: u.LastName,
-                                         username: u.Username,
-                                         avatarUrl: u.AvatarUrl,
-                                         email: u.Email,
-                                         emailVerified: u.EmailVerified,
-                                         lastLoginAt: u.LastLoginAt,
-                                         deletedAt: u.DeletedAt));
-  }
+    public async Task<IEnumerable<UserDetail>> GetAllAsync()
+    {
+        var users = await _userRepository.GetAllAsync();
+        return users.Select(u => new UserDetail(id: u.Id,
+                                                firstName: u.FirstName,
+                                                lastName: u.LastName,
+                                                username: u.Username,
+                                                avatarUrl: u.AvatarUrl,
+                                                emailVerified: u.EmailVerified,
+                                                email: u.Email,
+                                                deletedAt: u.DeletedAt,
+                                                lastLoginAt: u.LastLoginAt));
+    }
 }
