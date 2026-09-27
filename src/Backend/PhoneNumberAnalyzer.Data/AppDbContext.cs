@@ -14,11 +14,14 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<User>()
-            .HasMany(e => e.AuthProviders)
-            .WithOne(e => e.User)
-            .HasForeignKey(e => e.UserId)
-            .IsRequired();
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(t => t.Id);
+            entity.HasMany(e => e.AuthProviders)
+                  .WithOne(e => e.User)
+                  .HasForeignKey(e => e.UserId)
+                  .IsRequired();
+        });
 
         modelBuilder.Entity<PatternTemplate>(entity =>
         {

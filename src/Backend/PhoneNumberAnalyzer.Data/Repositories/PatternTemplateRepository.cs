@@ -49,7 +49,7 @@ public class PatternTemplateRepository(AppDbContext db) : IPatternTemplateReposi
         patternTemplate.Description = description;
     }
 
-    public async Task<ImmutableArray<PatternTemplate>> GetVisibleToUserAsync(int userId)
+    public async Task<ImmutableArray<PatternTemplate>> GetVisibleToUserAsync(Guid userId)
     {
         var templates = await _db.PatternTemplates
             .Where(t => t.DeletedAt == null && (t.OwnerId == userId || t.OwnerId == null))
