@@ -1,26 +1,31 @@
-import { apiClient } from "../../../shared/api/client";
+import {
+  getApiPatternTemplate,
+  getApiPatternTemplateById,
+  postApiPatternTemplate,
+  putApiPatternTemplateById,
+} from "@/client";
 import type {
   PatternTemplateDetail,
   PatternTemplateCreateCommand,
   PatternTemplateUpdateCommand,
-} from "@/shared/api/Api";
+} from "@/client";
 
 export async function getPatternTemplates(): Promise<PatternTemplateDetail[]> {
-  const { data } = await apiClient.api.patternTemplateList();
+  const { data } = await getApiPatternTemplate();
   return data;
 }
 
 export async function getPatternTemplateById(
   id: string,
 ): Promise<PatternTemplateDetail> {
-  const { data } = await apiClient.api.patternTemplateDetail(id);
+  const { data } = await getApiPatternTemplateById({ path: { id: id } });
   return data;
 }
 
 export async function createPatternTemplate(
   command: PatternTemplateCreateCommand,
 ): Promise<PatternTemplateDetail> {
-  const { data } = await apiClient.api.patternTemplateCreate(command);
+  const { data } = await postApiPatternTemplate({ body: command });
   return data;
 }
 
@@ -28,13 +33,5 @@ export async function updatePatternTemplate(
   id: string,
   command: PatternTemplateUpdateCommand,
 ): Promise<void> {
-  await apiClient.api.patternTemplateUpdate(id, command);
-}
-
-export async function disablePatternTemplate(id: string): Promise<void> {
-  await apiClient.api.patternTemplateDisableUpdate(id);
-}
-
-export async function enablePatternTemplate(id: string): Promise<void> {
-  await apiClient.api.patternTemplateEnableUpdate(id);
+  await putApiPatternTemplateById({ path: { id: id }, body: command });
 }
