@@ -1,5 +1,11 @@
-import { Api } from "./Api";
+import axios from "axios";
+import type { CreateClientConfig } from "@/client/client.gen";
 
-export const apiClient = new Api({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+const instance = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+});
+
+export const createClientConfig: CreateClientConfig = (config) => ({
+  ...config,
+  axios: instance,
 });

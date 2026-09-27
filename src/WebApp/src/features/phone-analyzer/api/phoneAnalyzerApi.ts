@@ -1,10 +1,10 @@
-import { apiClient } from "@/shared/api/client";
-import type { PhoneAnalysisResult } from "@/shared/api/Api";
+import { postApiPhoneAnalysis } from "@/client";
+import type { PhoneAnalysisResult } from "@/client";
 
 export async function analyzePhoneNumber(
   request: string,
 ): Promise<PhoneAnalysisResult[]> {
-  const { data } = await apiClient.api.phoneAnalysisCreate(request);
+  const { data } = await postApiPhoneAnalysis({ body: request });
 
   return data;
 }
