@@ -9,25 +9,27 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
-import { useLogin } from "./hooks/useLogin";
+import { useLogin } from "../hooks/useLogin";
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const { mutate, isPending, error } = useLogin();
+  const login = useLogin();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [inputError, setInputError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    mutate(
-      { username, password },
-      {
-        onSuccess: (data) => {
-          // localStorage.setItem("token", data.accessToken);
-          navigate("/");
-        },
-      },
-    );
+    if (!username || !password) {
+      setInputError("Tên đăng nhập hoặc mật khẩu không được để trống!");
+    } else {
+      try {
+        await login.mutateAsync({ username, password });
+        navigate("/");
+      } catch {
+        console.log("login error");
+      }
+    }
   };
 
   return (
@@ -41,54 +43,60 @@ export default function LoginPage() {
       >
         <Stack spacing={3}>
           <Box>
-            <Typography variant="h5" fontWeight="bold">
-              Welcome back
-            </Typography>
+            <Typography variant="h5">Chào mừng trở lại</Typography>
             <Typography variant="body2" color="text.secondary">
-              Login to your account
+              Đăng nhập vào tài khoản của bạn
             </Typography>
           </Box>
 
           <form onSubmit={handleSubmit}>
             <Stack spacing={2}>
               <TextField
-                error={!!error}
-                label="Username or Email"
+                error={!!inputError}
+                label="Tên đăng nhập hoặc Email"
                 fullWidth
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                autoFocus
               />
 
               <TextField
-                error={!!error}
-                label="Password"
+                error={!!inputError}
+                label="Mật khẩu"
                 type="password"
                 fullWidth
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
 
-              {error && (
-                <Typography variant="caption" color="error">
-                  {error?.response?.data?.detail}
+              {inputError && (
+                <Typography variant="subtitle1" color="error">
+                  {inputError}
                 </Typography>
               )}
+
+              {/* {loginError && ( */}
+              {/*   <Typography variant="caption" color="error"> */}
+              {/*     <pre>{JSON.stringify(loginError, null, 2)}</pre> */}
+              {/*   </Typography> */}
+              {/* )} */}
 
               <Button
                 type="submit"
                 variant="contained"
                 size="large"
                 sx={{ mt: 1 }}
+              // disabled={isLoggingIn}
               >
-                Login
+                Đăng nhập
               </Button>
             </Stack>
           </form>
 
-          <Typography variant="body2">
-            Don’t have an account?{" "}
+          <Typography variant="body1">
+            Chưa có tài khoản?{" "}
             <Button component={RouterLink} to="/register">
-              Register
+              Đăng ký ngay
             </Button>
           </Typography>
         </Stack>

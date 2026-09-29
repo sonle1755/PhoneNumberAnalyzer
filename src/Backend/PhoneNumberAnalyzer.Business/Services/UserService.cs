@@ -26,4 +26,19 @@ public class UserService : IUserService
                                                 deletedAt: u.DeletedAt,
                                                 lastLoginAt: u.LastLoginAt));
     }
+
+    public async Task<UserDetail?> GetByIdAsync(Guid userId)
+    {
+        var user = await _userRepository.GetByIdAsync(userId);
+        return user is null ? null : new UserDetail(id: userId,
+                                                    firstName: user.FirstName,
+                                                    lastName: user.LastName,
+                                                    username: user.Username,
+                                                    avatarUrl: user.AvatarUrl,
+                                                    emailVerified: user.EmailVerified,
+                                                    email: user.Email,
+                                                    deletedAt: user.DeletedAt,
+                                                    lastLoginAt: user.LastLoginAt);
+
+    }
 }

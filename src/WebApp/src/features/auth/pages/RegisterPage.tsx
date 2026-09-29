@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
-import { useRegister } from "./hooks/useRegister";
+import { useRegister } from "../hooks/useRegister";
 import type { RegisterRequest } from "@/shared/api/Api";
 
 export default function RegisterPage() {

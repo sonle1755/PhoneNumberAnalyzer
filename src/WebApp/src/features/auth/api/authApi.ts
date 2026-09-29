@@ -1,10 +1,37 @@
-import { apiClient } from "../../../shared/api/client";
-import type { LoginRequest, RegisterRequest } from "@/shared/api/Api";
+import {
+  postApiAuthLogin,
+  postApiAuthLogout,
+  postApiAuthRefresh,
+  postApiAuthRegister,
+  getApiAuthMe,
+} from "@/client";
+import type {
+  LoginRequest,
+  LoginResponse,
+  RegisterRequest,
+} from "@/client/types.gen";
+export const authApi = {
+  login: async (credentials: LoginRequest): Promise<LoginResponse> => {
+    const { data, error } = await postApiAuthLogin({ body: credentials });
 
-export async function register(request: RegisterRequest): Promise<void> {
-  await apiClient.api.authRegisterCreate(request);
-}
+    if (error || !data) {
+      throw new Error("loginfailed");
+    }
+    return data;
+  },
 
-export async function login(request: LoginRequest): Promise<void> {
-  await apiClient.api.authLoginCreate(request);
-}
+  logout: () => postApiAuthLogout(),
+
+  refresh: () => postApiAuthRefresh().then((r) => r.data),
+
+  register: (request: RegisterRequest) =>
+    postApiAuthRegister({ body: request }),
+
+  fetchCurrentUser: async () => {
+    const { data, error } = await getApiAuthMe();
+    if (error || !data) {
+      throw new Error("Not authenticated!");
+    }
+    return data;
+  },
+};

@@ -21,7 +21,7 @@ import {
   type PatternRuleFormModel,
   PatternRuleGroupMode,
 } from "../types";
-import { RuleOperator, PatternRuleType } from "@/shared/api/Api";
+import { RuleOperator, PatternRuleType } from "@/client";
 
 const MAX_DEPTH = 5; // mirrors backend's enforced max nesting depth
 
@@ -30,7 +30,7 @@ function createEmptyRule(): PatternRuleFormModel {
     tempId: crypto.randomUUID(),
     name: "",
     length: 1,
-    ruleType: PatternRuleType.EqualsPosition,
+    ruleType: PatternRuleType.EQUALS_POSITION,
     targetPositions: [],
     referencePosition: 0,
     values: [],
@@ -41,7 +41,7 @@ function createEmptyChildGroup(): PatternRuleGroupFormModel {
   return {
     tempId: crypto.randomUUID(),
     name: "",
-    ruleOperator: RuleOperator.And,
+    ruleOperator: RuleOperator.AND,
     mode: PatternRuleGroupMode.Rules,
     rules: [],
     childGroups: [],
@@ -166,8 +166,8 @@ export function RuleGroupEditor({
               exclusive
               onChange={(_, v) => handleOperatorChange(v)}
             >
-              <ToggleButton value={RuleOperator.And}>AND</ToggleButton>
-              <ToggleButton value={RuleOperator.Or}>OR</ToggleButton>
+              <ToggleButton value={RuleOperator.AND}>AND</ToggleButton>
+              <ToggleButton value={RuleOperator.OR}>OR</ToggleButton>
             </ToggleButtonGroup>
           </Stack>
 

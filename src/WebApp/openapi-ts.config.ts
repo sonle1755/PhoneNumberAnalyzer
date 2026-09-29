@@ -8,6 +8,10 @@ export default defineConfig({
       name: "@hey-api/client-axios",
       runtimeConfigPath: "./src/shared/api/client.ts",
     },
+    {
+      name: "@hey-api/typescript",
+      enums: "javascript",
+    },
     "@tanstack/react-query",
   ],
 });

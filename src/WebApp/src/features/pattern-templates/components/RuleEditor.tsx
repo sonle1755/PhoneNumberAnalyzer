@@ -14,7 +14,7 @@ import {
 import Select from "@mui/material/Select";
 import type { PatternRuleFormModel } from "../types";
 import { ruleTypeOptions, positionOptions } from "../constants";
-import { PatternRuleType } from "@/shared/api/Api";
+import type { PatternRuleType } from "@/client";
 
 const style = {
   position: "absolute",
