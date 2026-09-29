@@ -13,6 +13,8 @@ export function GlobalStyles() {
         },
         "#root": {
           minHeight: "100dvh",
+          display: "flex",
+          flexDirection: "column",
         },
         "*": {
           scrollbarWidth: "thin",

@@ -16,6 +16,7 @@ export function Footer() {
         pb: 2,
         color: "rgba(0,0,0,0.5)",
         height: "80px",
+        marginTop: "auto",
       }}
     >
       <Grid size={4}>

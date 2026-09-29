@@ -1,11 +1,15 @@
-import { Outlet, Link as RouterLink } from "react-router-dom";
+import {
+  Outlet,
+  replace,
+  Link as RouterLink,
+  useNavigate,
+} from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   AppBar,
   Toolbar,
   Button,
   Box,
-  Grid,
   IconButton,
   Link,
   type SxProps,
@@ -19,15 +23,19 @@ import {
   Stack,
 } from "@mui/material";
 import { useState } from "react";
-import { Footer } from "./Footer";
+import { Footer } from "./components/Footer";
 import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded";
 import LoginIcon from "@mui/icons-material/Login";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Logo } from "./Logo";
+import { Logo } from "./components/Logo";
 import { ScrollToTop } from "@/shared/components/ScrollToTop";
 import { InitialTransition } from "@/shared/components/InitialTransition";
+import { UserAvatar } from "./components/UserAvatar";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 
 export function AppLayout({ window }: { window?: () => Window }) {
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const container =
     window !== undefined ? () => window().document.body : undefined;
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -35,6 +43,7 @@ export function AppLayout({ window }: { window?: () => Window }) {
     setMobileOpen((prevState) => !prevState);
   };
 
+  const handleLogout = async () => await logout();
   const topbarItemSx: SxProps<Theme> = {
     textDecoration: "none",
     color: "text.primary",
@@ -91,7 +100,7 @@ export function AppLayout({ window }: { window?: () => Window }) {
           backgroundColor: "background.default",
         }}
       >
-        <Toolbar sx={{ display: "flex" }}>
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -101,13 +110,10 @@ export function AppLayout({ window }: { window?: () => Window }) {
           >
             <MenuIcon />
           </IconButton>
-          <Grid sx={{ flexGrow: 1 }}>
-            <Logo />
-          </Grid>
+          <Logo />
 
           <Box
             sx={{
-              flexGrow: 1,
               cursor: "pointer",
               display: {
                 xs: "none",
@@ -128,59 +134,68 @@ export function AppLayout({ window }: { window?: () => Window }) {
             </Link>
           </Box>
           <Box sx={{ display: "flex", gap: 1 }}>
-            <IconButton
-              component={RouterLink}
-              to="/login"
-              sx={{
-                display: {
-                  sm: "block",
-                  md: "none",
-                },
-              }}
-            >
-              <LoginIcon />
-            </IconButton>
-            <IconButton
-              component={RouterLink}
-              to="/register"
-              color="primary"
-              sx={{
-                display: {
-                  sm: "block",
-                  md: "none",
-                },
-              }}
-            >
-              <PersonAddAltRoundedIcon />
-            </IconButton>
-            <Button
-              component={RouterLink}
-              to="/login"
-              variant="outlined"
-              sx={{
-                display: {
-                  xs: "none",
-                  sm: "none",
-                  md: "block",
-                },
-              }}
-            >
-              ĐĂNG NHẬP
-            </Button>
-            <Button
-              component={RouterLink}
-              to="/register"
-              variant="contained"
-              sx={{
-                display: {
-                  xs: "none",
-                  sm: "none",
-                  md: "block",
-                },
-              }}
-            >
-              ĐĂNG KÝ
-            </Button>
+            {user ? (
+              <UserAvatar
+                username={user.username}
+                handleLogout={handleLogout}
+              />
+            ) : (
+              <>
+                <IconButton
+                  component={RouterLink}
+                  to="/login"
+                  sx={{
+                    display: {
+                      sm: "block",
+                      md: "none",
+                    },
+                  }}
+                >
+                  <LoginIcon />
+                </IconButton>
+                <IconButton
+                  component={RouterLink}
+                  to="/register"
+                  color="primary"
+                  sx={{
+                    display: {
+                      sm: "block",
+                      md: "none",
+                    },
+                  }}
+                >
+                  <PersonAddAltRoundedIcon />
+                </IconButton>
+                <Button
+                  component={RouterLink}
+                  to="/login"
+                  variant="outlined"
+                  sx={{
+                    display: {
+                      xs: "none",
+                      sm: "none",
+                      md: "block",
+                    },
+                  }}
+                >
+                  ĐĂNG NHẬP
+                </Button>
+                <Button
+                  component={RouterLink}
+                  to="/register"
+                  variant="contained"
+                  sx={{
+                    display: {
+                      xs: "none",
+                      sm: "none",
+                      md: "block",
+                    },
+                  }}
+                >
+                  ĐĂNG KÝ
+                </Button>
+              </>
+            )}
           </Box>
         </Toolbar>
       </AppBar>

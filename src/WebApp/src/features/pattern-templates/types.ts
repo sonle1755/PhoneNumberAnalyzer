@@ -1,4 +1,5 @@
-import { RuleOperator, type PatternRuleType } from "@/shared/api/Api";
+import { RuleOperator } from "@/client";
+import type { PatternRuleType } from "@/client";
 
 export const PatternRuleGroupMode = {
   Groups: 0,
@@ -37,7 +38,7 @@ export function createEmptyRootGroup(): PatternRuleGroupFormModel {
   return {
     tempId: crypto.randomUUID(),
     name: "Root",
-    ruleOperator: RuleOperator.And,
+    ruleOperator: RuleOperator.AND,
     mode: PatternRuleGroupMode.Rules,
     rules: [],
     childGroups: [],

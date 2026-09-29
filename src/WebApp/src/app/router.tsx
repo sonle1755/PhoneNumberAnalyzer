@@ -1,14 +1,15 @@
 import { createBrowserRouter } from "react-router-dom";
 
 import HomePage from "@/features/home/HomePage";
-import LoginPage from "@/features/auth/LoginPage";
-import RegisterPage from "@/features/auth/RegisterPage";
+import LoginPage from "@/features/auth/pages/LoginPage";
+import RegisterPage from "@/features/auth/pages/RegisterPage";
 import {
   PatternTemplateListPage,
   PatternTemplateCreatePage,
   PatternTemplateEditPage,
 } from "@/features/pattern-templates";
-import { AppLayout } from "./Layouts/AppLayout";
+import { AppLayout } from "./layouts/AppLayout";
+import ProtectedRoute from "@/features/auth/components/ProtectedRoute";
 
 export const router = createBrowserRouter([
   {
@@ -28,6 +29,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/pattern-templates",
+        element: <ProtectedRoute />,
         children: [
           {
             index: true,

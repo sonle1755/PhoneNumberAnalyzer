@@ -8,16 +8,16 @@ namespace PhoneNumberAnalyzer.Api.Controllers;
 [Route("api/[controller]")]
 public class UserController : ControllerBase
 {
-  private readonly IUserService _userService;
+    private readonly IUserService _userService;
 
-  public UserController(IUserService userService)
-  {
-    _userService = userService;
-  }
+    public UserController(IUserService userService)
+    {
+        _userService = userService;
+    }
 
-  [HttpGet]
-  public async Task<IEnumerable<UserDto>> GetAllAsync()
-  {
-    return await _userService.GetAllAsync();
-  }
+    [HttpGet]
+    public async Task<IEnumerable<UserDetail>> GetAllAsync()
+    {
+        return await _userService.GetAllAsync();
+    }
 }
