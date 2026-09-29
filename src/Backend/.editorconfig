@@ -10,3 +10,5 @@ indent_size = 2
 indent_size = 4
 csharp_style_namespace_declarations = file_scoped:error
 resharper_type_declaration_braces = end_of_line
+dotnet_diagnostic.RCS1124.severity = none
+dotnet_diagnostic.RCS1146.severity = none
