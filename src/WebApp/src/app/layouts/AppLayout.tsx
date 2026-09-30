@@ -28,6 +28,7 @@ import { UserAvatar } from "./components/UserAvatar";
 import SpaceDashboardRoundedIcon from "@mui/icons-material/SpaceDashboardRounded";
 import PatternRoundedIcon from "@mui/icons-material/PatternRounded";
 import NotificationsIconWithBadge from "./components/NotificationsIconWithBadge";
+import { routePaths } from "../routePaths";
 
 const drawerWidth = 180;
 
@@ -193,7 +194,7 @@ export function AppLayout() {
             >
               <ListItemButton
                 component={RouterLink}
-                to="/admin"
+                to={routePaths.admin}
                 sx={{
                   minHeight: 48,
                   px: 2.5,
@@ -213,7 +214,7 @@ export function AppLayout() {
               </ListItemButton>
               <ListItemButton
                 component={RouterLink}
-                to="/admin/pattern-templates"
+                to={routePaths.patternTemplate}
                 sx={{
                   minHeight: 48,
                   px: 2.5,

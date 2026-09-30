@@ -12,21 +12,22 @@ import { PublicLayout } from "./layouts/PublicLayout";
 import { AppLayout } from "./layouts/AppLayout";
 import ProtectedRoute from "@/features/auth/components/ProtectedRoute";
 import { DashboardPage } from "@/features/admin/pages/DashboardPage";
+import { routePaths } from "./routePaths";
 
 export const router = createBrowserRouter([
   {
     element: <PublicLayout />,
     children: [
       {
-        path: "/",
+        path: routePaths.home,
         element: <HomePage />,
       },
       {
-        path: "/login",
+        path: routePaths.login,
         element: <LoginPage />,
       },
       {
-        path: "/register",
+        path: routePaths.register,
         element: <RegisterPage />,
       },
     ],
@@ -35,7 +36,7 @@ export const router = createBrowserRouter([
     element: <ProtectedRoute />,
     children: [
       {
-        path: "/admin",
+        path: routePaths.admin,
         element: <AppLayout />,
         children: [
           {
@@ -43,7 +44,7 @@ export const router = createBrowserRouter([
             element: <DashboardPage />,
           },
           {
-            path: "pattern-templates",
+            path: routePaths.patternTemplate,
             element: <ProtectedRoute />,
             children: [
               {
@@ -51,11 +52,11 @@ export const router = createBrowserRouter([
                 element: <PatternTemplateListPage />,
               },
               {
-                path: "new",
+                path: routePaths.patternTemplateCreate,
                 element: <PatternTemplateCreatePage />,
               },
               {
-                path: ":patternTemplateId",
+                path: routePaths.patternTemplateEdit,
                 element: <PatternTemplateEditPage />,
               },
             ],

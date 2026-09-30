@@ -10,6 +10,7 @@ import {
 import { useState } from "react";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { useLogin } from "../hooks/useLogin";
+import { routePaths } from "@/app/routePaths";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -95,7 +96,7 @@ export default function LoginPage() {
 
           <Typography variant="body1">
             Chưa có tài khoản?{" "}
-            <Button component={RouterLink} to="/register">
+            <Button component={RouterLink} to={routePaths.register}>
               Đăng ký ngay
             </Button>
           </Typography>

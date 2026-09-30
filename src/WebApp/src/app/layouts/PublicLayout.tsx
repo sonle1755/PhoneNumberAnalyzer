@@ -27,6 +27,7 @@ import { ScrollToTop } from "@/shared/components/ScrollToTop";
 import { InitialTransition } from "@/shared/components/InitialTransition";
 import { UserAvatar } from "./components/UserAvatar";
 import { useAuth } from "@/features/auth/hooks/useAuth";
+import { routePaths } from "../routePaths";
 
 export function PublicLayout({ window }: { window?: () => Window }) {
   const { user } = useAuth();
@@ -116,13 +117,25 @@ export function PublicLayout({ window }: { window?: () => Window }) {
               gap: 4,
             }}
           >
-            <Link component={RouterLink} to="/login" sx={topbarItemSx}>
+            <Link
+              component={RouterLink}
+              to={routePaths.login}
+              sx={topbarItemSx}
+            >
               PHÂN TÍCH
             </Link>
-            <Link component={RouterLink} to="/login" sx={topbarItemSx}>
+            <Link
+              component={RouterLink}
+              to={routePaths.login}
+              sx={topbarItemSx}
+            >
               TÍNH NĂNG
             </Link>
-            <Link component={RouterLink} to="/login" sx={topbarItemSx}>
+            <Link
+              component={RouterLink}
+              to={routePaths.login}
+              sx={topbarItemSx}
+            >
               CÁCH DÙNG
             </Link>
           </Box>
@@ -133,7 +146,7 @@ export function PublicLayout({ window }: { window?: () => Window }) {
               <>
                 <IconButton
                   component={RouterLink}
-                  to="/login"
+                  to={routePaths.login}
                   sx={{
                     display: {
                       sm: "block",
@@ -145,7 +158,7 @@ export function PublicLayout({ window }: { window?: () => Window }) {
                 </IconButton>
                 <IconButton
                   component={RouterLink}
-                  to="/register"
+                  to={routePaths.register}
                   color="primary"
                   sx={{
                     display: {
@@ -158,7 +171,7 @@ export function PublicLayout({ window }: { window?: () => Window }) {
                 </IconButton>
                 <Button
                   component={RouterLink}
-                  to="/login"
+                  to={routePaths.login}
                   variant="outlined"
                   sx={{
                     display: {
@@ -172,7 +185,7 @@ export function PublicLayout({ window }: { window?: () => Window }) {
                 </Button>
                 <Button
                   component={RouterLink}
-                  to="/register"
+                  to={routePaths.register}
                   variant="contained"
                   sx={{
                     display: {
