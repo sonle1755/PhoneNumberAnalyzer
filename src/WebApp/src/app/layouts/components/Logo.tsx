@@ -1,11 +1,12 @@
 import { Link as RouterLink } from "react-router-dom";
 import { Link } from "@mui/material";
+import { routePaths } from "@/app/routePaths";
 
 export function Logo() {
   return (
     <Link
       component={RouterLink}
-      to="/"
+      to={routePaths.home}
       sx={{ fontWeight: 700 }}
       underline="none"
     >

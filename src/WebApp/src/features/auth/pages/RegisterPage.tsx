@@ -11,6 +11,7 @@ import { useState } from "react";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { useRegister } from "../hooks/useRegister";
 import type { RegisterRequest } from "@/shared/api/Api";
+import { routePaths } from "@/app/routePaths";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -126,7 +127,7 @@ export default function RegisterPage() {
 
           <Typography variant="body2">
             Đã có tài khoản?{" "}
-            <Button component={RouterLink} to="/login">
+            <Button component={RouterLink} to={routePaths.login}>
               Đăng nhập ngay
             </Button>
           </Typography>
