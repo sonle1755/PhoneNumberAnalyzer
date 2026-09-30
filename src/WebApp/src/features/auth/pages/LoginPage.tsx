@@ -25,7 +25,7 @@ export default function LoginPage() {
     } else {
       try {
         await login.mutateAsync({ username, password });
-        navigate("/");
+        navigate("/admin");
       } catch {
         console.log("login error");
       }

@@ -8,12 +8,14 @@ import {
   PatternTemplateCreatePage,
   PatternTemplateEditPage,
 } from "@/features/pattern-templates";
+import { PublicLayout } from "./layouts/PublicLayout";
 import { AppLayout } from "./layouts/AppLayout";
 import ProtectedRoute from "@/features/auth/components/ProtectedRoute";
+import { DashboardPage } from "@/features/admin/pages/DashboardPage";
 
 export const router = createBrowserRouter([
   {
-    element: <AppLayout />,
+    element: <PublicLayout />,
     children: [
       {
         path: "/",
@@ -27,21 +29,36 @@ export const router = createBrowserRouter([
         path: "/register",
         element: <RegisterPage />,
       },
+    ],
+  },
+  {
+    element: <ProtectedRoute />,
+    children: [
       {
-        path: "/pattern-templates",
-        element: <ProtectedRoute />,
+        path: "/admin",
+        element: <AppLayout />,
         children: [
           {
             index: true,
-            element: <PatternTemplateListPage />,
+            element: <DashboardPage />,
           },
           {
-            path: "new",
-            element: <PatternTemplateCreatePage />,
-          },
-          {
-            path: ":patternTemplateId",
-            element: <PatternTemplateEditPage />,
+            path: "pattern-templates",
+            element: <ProtectedRoute />,
+            children: [
+              {
+                index: true,
+                element: <PatternTemplateListPage />,
+              },
+              {
+                path: "new",
+                element: <PatternTemplateCreatePage />,
+              },
+              {
+                path: ":patternTemplateId",
+                element: <PatternTemplateEditPage />,
+              },
+            ],
           },
         ],
       },

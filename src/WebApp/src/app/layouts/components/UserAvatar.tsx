@@ -2,8 +2,6 @@ import { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import { useLogout } from "@/features/auth/hooks/useLogout";
-import { useAuth } from "@/features/auth/hooks/useAuth";
-import { useNavigate } from "react-router-dom";
 
 function stringToColor(string: string) {
   let hash = 0;
@@ -27,6 +25,9 @@ function stringAvatar(name: string) {
   return {
     sx: {
       bgcolor: stringToColor(name),
+      cursor: "pointer",
+      width: "100%",
+      height: "100%",
     },
     children: name[0],
   };
@@ -34,10 +35,9 @@ function stringAvatar(name: string) {
 
 interface UserAvatarProps {
   username: string;
-  handleLogout: () => void;
 }
-export function UserAvatar({ username, handleLogout }: UserAvatarProps) {
-  const navigate = useNavigate();
+export function UserAvatar({ username }: UserAvatarProps) {
+  const logout = useLogout();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const open = Boolean(anchorEl);
@@ -54,6 +54,10 @@ export function UserAvatar({ username, handleLogout }: UserAvatarProps) {
     setAnchorEl(null);
   }
 
+  const handleLogout = async () => {
+    await logout.mutateAsync();
+  };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -65,6 +69,7 @@ export function UserAvatar({ username, handleLogout }: UserAvatarProps) {
         aria-controls={open ? "user-menu" : undefined}
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
+        sx={{ p: 0, width: "30px", height: "30px" }}
       >
         <Avatar {...stringAvatar(username)} />
       </IconButton>
