@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import { IconButton, Menu, MenuItem } from "@mui/material";
-import { useLogout } from "@/features/auth/hooks/useLogout";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 
 function stringToColor(string: string) {
   let hash = 0;
@@ -33,11 +33,8 @@ function stringAvatar(name: string) {
   };
 }
 
-interface UserAvatarProps {
-  username: string;
-}
-export function UserAvatar({ username }: UserAvatarProps) {
-  const logout = useLogout();
+export function UserAvatar() {
+  const { user, logout } = useAuth();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const open = Boolean(anchorEl);
@@ -55,7 +52,7 @@ export function UserAvatar({ username }: UserAvatarProps) {
   }
 
   const handleLogout = async () => {
-    await logout.mutateAsync();
+    await logout();
   };
 
   const handleClose = () => {
@@ -71,7 +68,7 @@ export function UserAvatar({ username }: UserAvatarProps) {
         aria-expanded={open ? "true" : undefined}
         sx={{ p: 0, width: "30px", height: "30px" }}
       >
-        <Avatar {...stringAvatar(username)} />
+        <Avatar {...stringAvatar(user.username)} />
       </IconButton>
       <Menu
         id="user-menu"
