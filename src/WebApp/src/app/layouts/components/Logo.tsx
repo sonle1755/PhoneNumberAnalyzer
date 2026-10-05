@@ -2,12 +2,15 @@ import { Link as RouterLink } from "react-router-dom";
 import { Link } from "@mui/material";
 import { routePaths } from "@/app/routePaths";
 
-export function Logo() {
+export function Logo({ fontSize }: { fontSize?: number | null }) {
   return (
     <Link
       component={RouterLink}
       to={routePaths.home}
-      sx={{ fontWeight: 700 }}
+      sx={{
+        fontWeight: 700,
+        fontSize: fontSize ? fontSize : 16,
+      }}
       underline="none"
     >
       <span
